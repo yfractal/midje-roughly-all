@@ -83,4 +83,15 @@
              (roughly-all 3 1) => checker?)
        (fact "for number"
              (+ 1 HALF-TOLERANCE) => (roughly-all 1)
-             1.5 => (roughly-all 1 1)))
+             1.5 => (roughly-all 1 1))
+       (fact "roughly equal"
+             {:a 1 :b {:bb 2 :cc 3}} => (roughly-all {:a 2 :b {:bb 3 :cc 4}} 2)
+             {:a 1 :b {:bb 2 :cc (list 1 2)}} => (roughly-all {:a 2 :b {:bb 3 :cc (list 3 4)}} 2)
+             {:a 1 :b {:bb 2 :cc (list 1 {:a 2})}} => (roughly-all {:a 2 :b {:bb 3 :cc (list 3 {:a 3})}} 2)
+             {:a 1 :b {:bb 2 :cc (double-array [1 2])}} => (roughly-all {:a 2 :b {:bb 3 :cc (double-array  [3 4])}} 2)
+             {:a 1 :b {:bb 2 :cc {:ddd 3}}} => (roughly-all {:a 2 :b {:bb 3 :cc {:ddd 4}}} 2)
+             {:a (+ 1 HALF-TOLERANCE) :b {:bb (+ 2 HALF-TOLERANCE) :cc {:ddd (+ 3 HALF-TOLERANCE)}}} => (roughly-all {:a 1 :b {:bb 2 :cc {:ddd 3}}}))
+       (fact "roughly not equal"
+             {:a 1 :b {:bb 2 :cc 3}} =not=> (roughly-all {:a 2 :b {:bb 3 :cc 4}} 0.5)
+             {:a 1 :b {:bb 2 :cc (list 1 {:a 2})}} =not=> (roughly-all {:a 2 :b {:bb 3 :cc (list 3 {:a 3})}} 0.5)
+             {:a (+ 1 DOUBLE-TOLERANCE) :b {:bb (+ 2 DOUBLE-TOLERANCE) :cc {:ddd (+ 3 DOUBLE-TOLERANCE)}}} =not=> (roughly-all {:a 1 :b {:bb 2 :cc {:ddd 3}}})))
