@@ -9,17 +9,23 @@
   (and (>= expected (-' actual tolerance))
        (<= expected (+' actual tolerance))))
 
+(defn- not-same-length?
+  [c1 c2]
+  (not= (count c1) (count c2)))
+
 (defn coll-roughly-equal?
   [compare-val compared-val tolerance]
-  (loop [remain-compare-val compare-val
-         remain-compared-val compared-val
-         eq true]
-    (cond (not eq) false
-          (empty? remain-compare-val) true
-          :else (recur
-                 (rest remain-compare-val)
-                 (rest remain-compared-val)
-                 (roughly-equal? (first remain-compare-val) (first remain-compared-val) tolerance)))))
+  (if (not-same-length? compare-val compared-val)
+    false
+    (loop [remain-compare-val compare-val
+           remain-compared-val compared-val
+           eq true]
+      (cond (not eq) false
+            (empty? remain-compare-val) true
+            :else (recur
+                   (rest remain-compare-val)
+                   (rest remain-compared-val)
+                   (roughly-equal? (first remain-compare-val) (first remain-compared-val) tolerance))))))
 
 (defn comparable?
   [a1 a2]

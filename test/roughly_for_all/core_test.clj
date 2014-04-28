@@ -21,7 +21,9 @@
              (coll-roughly-equal? [1 2] [1.5 2.5] 0.4) => false)
        (fact "recursive coll"
              (coll-roughly-equal? (list 1 (list 2)) (list 1.5 (list 2.5)) 1) => true
-             (coll-roughly-equal? (list 1 (list 2)) (list 1.5 (list 2.5)) 0.4) => false))
+             (coll-roughly-equal? (list 1 (list 2)) (list 1.5 (list 2.5)) 0.4) => false)
+       (fact "for different length"
+             (coll-roughly-equal? '(1 2) '(1.5 2.5 3) 1) => false))
 
 (facts "roughly-equal? a dispatch by input type"
        (fact "different type, should return false"
