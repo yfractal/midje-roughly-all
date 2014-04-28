@@ -33,6 +33,14 @@
              (double-arr-roughly-equal? (double-array [1 2]) (double-array [1.5 2.5 3]) 1) => false
              (double-arr-roughly-equal? (double-array [1 2 10]) (double-array [1.5 2.5]) 1) => false))
 
+(facts "double-arr-roughly-equal?"
+       (fact "simple case"
+             (int-arr-roughly-equal? (int-array [1 2]) (int-array [2 3]) 2) => true))
+
+(facts "double and int"
+       (fact "different type of array is not equal"
+             (roughly-equal? (int-array [1 2]) (double-array [2 3]) 4) => false))
+
 (facts "roughly-equal? a dispatch by input type"
        (fact "different type, should return false"
              (roughly-equal? 1 [1] 3) => false)
@@ -47,7 +55,11 @@
        (fact "for double-array"
              (roughly-equal? (double-array [1]) (double-array [1.5]) 1) => true
              (provided
-              (double-arr-roughly-equal? anything anything anything) => true :times 1)))
+              (double-arr-roughly-equal? anything anything anything) => true :times 1))
+       (fact "for int-array"
+             (roughly-equal? (int-array [1]) (int-array [1.5]) 1) => true
+             (provided
+              (int-arr-roughly-equal? anything anything anything) => true :times 1)))
 
 (facts "roughly-all"
        (fact "it is a checker"
