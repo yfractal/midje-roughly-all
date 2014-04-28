@@ -34,11 +34,22 @@
                     (arr-roughly-equal? (double-array [1 2]) (double-array [1.5 2.5 3]) 1) => false
                     (arr-roughly-equal? (double-array [1 2 10]) (double-array [1.5 2.5]) 1) => false))
        (facts "for int"
-              (arr-roughly-equal? (int-array [1 2]) (int-array [1.5 2.5]) 1) => true))
-
-(facts "double and int"
+              (arr-roughly-equal? (int-array [1 2]) (int-array [1.5 2.5]) 1) => true)
        (fact "different type of array is not equal"
              (roughly-equal? (int-array [1 2]) (double-array [2 3]) 4) => false))
+
+(facts "hash-map-roughly-equal?" ;; may be {:a => 1} called hash or map or dict or obj orsomething elsse... i don't know
+       (facts "all keys should be same"
+              (fact "simple"
+                    (hash-map-roughly-equal? {:a 1} {:b 1} 1) => false)
+              (fact "different order"
+                    (hash-map-roughly-equal? {:a 1 :b 2} {:b 2 :a 1} 1) =not=> false))
+       (fact "one level"
+             (hash-map-roughly-equal? {:a 1 :b 2} {:b 2 :a 1} 2) => true
+             (hash-map-roughly-equal? {:a 1 :b 2} {:b 3 :a 2} 0.5) => false)
+       (fact "more than one level"
+             (hash-map-roughly-equal? {:a 1 :b {:b 2}} {:b {:b 2} :a 1} 2) => true
+             (hash-map-roughly-equal? {:a 1 :b {:b 2}} {:b {:b 3} :a 2} 0.5) => false))
 
 (facts "roughly-equal? a dispatch by input type"
        (fact "different type, should return false"
@@ -58,7 +69,11 @@
        (fact "for int-array"
              (roughly-equal? (int-array [1]) (int-array [1.5]) 1) => true
              (provided
-              (arr-roughly-equal? anything anything anything) => true :times 1)))
+              (arr-roughly-equal? anything anything anything) => true :times 1))
+       (fact "for hash-map"
+             (roughly-equal? {:a 1} {:a 1.5} 1) => true
+             (provided
+              (hash-map-roughly-equal? anything anything anything) => true :times 1)))
 
 (facts "roughly-all"
        (fact "it is a checker"

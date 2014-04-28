@@ -41,6 +41,27 @@
 
 (def arr-roughly-equal? coll-roughly-equal?) ;; coll-roughly-equal? can deal with array
 
+(defn- hash-map?
+  [h]
+  (= clojure.lang.PersistentArrayMap (type h)))
+
+(defn hash-map-roughly-equal?
+  [compare-hm compared-hm tolerance]
+  (let [compare-hm-keys (keys compare-hm)
+        compared-hm-keys (keys compared-hm)]
+    (if (not= compare-hm-keys compared-hm-keys)
+      false
+      (loop [remain-compare-hm-keys compare-hm-keys
+             eq-flag true]
+        (cond (not eq-flag) false
+              (empty? remain-compare-hm-keys) true
+              :else (recur
+                     (rest remain-compare-hm-keys)
+                     (roughly-equal?
+                      ((first remain-compare-hm-keys) compare-hm)
+                      ((first remain-compare-hm-keys) compared-hm)
+                       tolerance)))))))
+
 (defn comparable?
   [a1 a2]
   (or (=  (type a1) (type a2))
@@ -51,6 +72,7 @@
   (cond (not (comparable? expected actual)) false
         (number? expected) (number-roughly-equal? expected actual tolerance)
         (array? expected) (arr-roughly-equal? expected actual tolerance)
+        (hash-map? expected) (hash-map-roughly-equal? expected actual tolerance) ; hahs-map is coll too... here is bad...
         (coll? expected) (coll-roughly-equal? expected actual tolerance)))
 
 (defchecker roughly-all
