@@ -35,9 +35,11 @@
   [arr]
   (= (type arr) (Class/forName "[I" )))
 
-(def double-arr-roughly-equal? coll-roughly-equal?) ;; coll-roughly-equal? can deal with double-array
+(defn- array?
+  [arr]
+  (or (double-array? arr) (int-array? arr)))
 
-(def int-arr-roughly-equal? coll-roughly-equal?)
+(def arr-roughly-equal? coll-roughly-equal?) ;; coll-roughly-equal? can deal with array
 
 (defn comparable?
   [a1 a2]
@@ -48,8 +50,7 @@
   [expected actual tolerance]
   (cond (not (comparable? expected actual)) false
         (number? expected) (number-roughly-equal? expected actual tolerance)
-        (double-array? expected) (double-arr-roughly-equal? expected actual tolerance)
-        (int-array? expected) (int-arr-roughly-equal? expected actual tolerance)
+        (array? expected) (arr-roughly-equal? expected actual tolerance)
         (coll? expected) (coll-roughly-equal? expected actual tolerance)))
 
 (defchecker roughly-all

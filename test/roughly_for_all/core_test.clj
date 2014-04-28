@@ -25,17 +25,16 @@
        (fact "for different length"
              (coll-roughly-equal? '(1 2) '(1.5 2.5 3) 1) => false))
 
-(facts "double-arr-roughly-equal?"
-       (fact "simple case"
-             (double-arr-roughly-equal? (double-array [1 2]) (double-array [1.5 2.5]) 1) => true
-             (double-arr-roughly-equal? (double-array [1 2]) (double-array [1.5 2.5]) 0.4) => false)
-       (fact "for different length"
-             (double-arr-roughly-equal? (double-array [1 2]) (double-array [1.5 2.5 3]) 1) => false
-             (double-arr-roughly-equal? (double-array [1 2 10]) (double-array [1.5 2.5]) 1) => false))
-
-(facts "double-arr-roughly-equal?"
-       (fact "simple case"
-             (int-arr-roughly-equal? (int-array [1 2]) (int-array [2 3]) 2) => true))
+(facts "arr-roughly-equal?"
+       (facts "for double array"
+              (fact "simple case"
+                    (arr-roughly-equal? (double-array [1 2]) (double-array [1.5 2.5]) 1) => true
+                    (arr-roughly-equal? (double-array [1 2]) (double-array [1.5 2.5]) 0.4) => false)
+              (fact "for different length"
+                    (arr-roughly-equal? (double-array [1 2]) (double-array [1.5 2.5 3]) 1) => false
+                    (arr-roughly-equal? (double-array [1 2 10]) (double-array [1.5 2.5]) 1) => false))
+       (facts "for int"
+              (arr-roughly-equal? (int-array [1 2]) (int-array [1.5 2.5]) 1) => true))
 
 (facts "double and int"
        (fact "different type of array is not equal"
@@ -55,11 +54,11 @@
        (fact "for double-array"
              (roughly-equal? (double-array [1]) (double-array [1.5]) 1) => true
              (provided
-              (double-arr-roughly-equal? anything anything anything) => true :times 1))
+              (arr-roughly-equal? anything anything anything) => true :times 1))
        (fact "for int-array"
              (roughly-equal? (int-array [1]) (int-array [1.5]) 1) => true
              (provided
-              (int-arr-roughly-equal? anything anything anything) => true :times 1)))
+              (arr-roughly-equal? anything anything anything) => true :times 1)))
 
 (facts "roughly-all"
        (fact "it is a checker"
