@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [roughly-for-all.core :refer :all])
   (:use midje.sweet
-      [midje.checking.checkers.defining :only [checker?]]))
+        [midje.checking.checkers.defining :only [checker?]]))
 
 (def HALF-TOLERANCE  (/ 1.0E-6 2))
 (def DOUBLE-TOLERANCE  (* 1.0E-6 2))
@@ -50,6 +50,14 @@
        (fact "more than one level"
              (hash-map-roughly-equal? {:a 1 :b {:b 2}} {:b {:b 2} :a 1} 2) => true
              (hash-map-roughly-equal? {:a 1 :b {:b 2}} {:b {:b 3} :a 2} 0.5) => false))
+
+
+(defrecord Foo [a b])
+(facts "record-roughly-equal?"
+       (fact ""
+             (record-roughly-equal? (Foo. 1 2) (Foo. 1.1 2.1)  1 ) => true)
+       (fact "record should not equal hash-map"
+             (roughly-equal? (Foo. 1 2) {:a 1 :b 2} 1) => false))
 
 (facts "roughly-equal? a dispatch by input type"
        (fact "different type, should return false"

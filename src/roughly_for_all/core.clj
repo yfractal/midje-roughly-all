@@ -60,9 +60,18 @@
                      (roughly-equal?
                       ((first remain-compare-hm-keys) compare-hm)
                       ((first remain-compare-hm-keys) compared-hm)
-                       tolerance)))))))
+                      tolerance)))))))
+
+(defn- to-hash-map
+  [record]
+  (merge {} record))
+
+(defn record-roughly-equal?
+  [compare compared tolerance]
+  (hash-map-roughly-equal? (to-hash-map compare) (to-hash-map compared) tolerance))
 
 (defn comparable?
+  "same type or both are number"
   [a1 a2]
   (or (=  (type a1) (type a2))
       (and (number? a1) (number? a2))))
@@ -73,7 +82,8 @@
         (number? expected) (number-roughly-equal? expected actual tolerance)
         (array? expected) (arr-roughly-equal? expected actual tolerance)
         (hash-map? expected) (hash-map-roughly-equal? expected actual tolerance) ; hahs-map is coll too... here is bad...
-        (coll? expected) (coll-roughly-equal? expected actual tolerance)))
+        (coll? expected) (coll-roughly-equal? expected actual tolerance)
+        :else (record-roughly-equal? expected actual tolerance)))
 
 (defchecker roughly-all
   ([expected tolerance]
